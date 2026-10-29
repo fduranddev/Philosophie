@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiches Bac Philo — 17 Notions</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c0a;
+    --surface: #161410;
+    --card: #1c1916;
+    --border: #2e2a24;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5f0e8;
+    --muted: #7a7060;
+    --accent1: #b05a3a;
+    --accent2: #3a6b8a;
+    --accent3: #5a7a3a;
+    --text: #e8e0d0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  header {
+    text-align: center;
+    padding: 60px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 64px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 16px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .header-sub {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin: 24px auto;
+    opacity: 0.5;
+  }
+
+  /* Filters */
+  .filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 0 24px 40px;
+  }
+
+  .filter-btn {
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.07);
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2px;
+    padding: 0 2px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 32px 28px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--card-accent, var(--gold));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover::before, .card.open::before {
+    transform: scaleY(1);
+  }
+
+  .card:hover {
+    background: #201e1a;
+    border-color: #3e3830;
+  }
+
+  .card.open {
+    background: #201e1a;
+    border-color: var(--card-accent, var(--gold));
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 0;
+  }
+
+  .card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    padding-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .card-title-block { flex: 1; }
+
+  .card-category {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--gold));
+    margin-bottom: 6px;
+    opacity: 0.8;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+  }
+
+  .card-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 8px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .card-toggle {
+    color: var(--muted);
+    font-size: 18px;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .card.open .card-toggle { transform: rotate(45deg); color: var(--gold); }
+
+  /* Body */
+  .card-body {
+    display: none;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .card.open .card-body { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--gold));
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .section-content {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #b8b0a0;
+    margin-bottom: 20px;
+  }
+
+  .quote-block {
+    background: rgba(201,168,76,0.05);
+    border-left: 2px solid var(--card-accent, var(--gold));
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+
+  .quote-author {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+
+  .philosophers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .philosopher-tag {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .problems {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .problem-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #9a9080;
+    line-height: 1.5;
+  }
+
+  .problem-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--card-accent, var(--gold));
+    flex-shrink: 0;
+    margin-top: 7px;
+    opacity: 0.7;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Serial Thinker · Programme complet</div>
+  <h1>Fiches <em>Bac Philo</em></h1>
+  <p class="header-sub">17 notions essentielles · Terminale Générale</p>
+  <div class="divider"></div>
+</header>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterCards('all')">Toutes</button>
+  <button class="filter-btn" onclick="filterCards('existence')">Existence &amp; Culture</button>
+  <button class="filter-btn" onclick="filterCards('morale')">Morale &amp; Politique</button>
+  <button class="filter-btn" onclick="filterCards('connaissance')">Connaissance</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Cliquez sur une carte pour développer la fiche · Baccalauréat Philosophie</footer>
+
+<script>
+const notions = [
+  {
+    id: 1,
+    title: "La Conscience",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#c9a84c",
+    tagline: "La connaissance immédiate que l'homme a de lui-même et du monde",
+    definition: "La conscience est la capacité de se représenter soi-même et le monde extérieur. Elle distingue l'homme de l'animal : être conscient, c'est savoir qu'on sait, se voir agir. Descartes en fait le fondement de toute certitude : « Je pense, donc je suis ».",
+    quote: { text: "Je pense, donc je suis.", author: "Descartes, Discours de la méthode" },
+    philosophers: ["Descartes", "Hegel", "Sartre", "Husserl", "Locke"],
+    problems: [
+      "La conscience est-elle infaillible sur elle-même ?",
+      "La conscience fait-elle de l'homme un être libre ?",
+      "Peut-on avoir une conscience sans langage ?",
+      "Y a-t-il une conscience animale ?"
+    ]
+  },
+  {
+    id: 2,
+    title: "L'Inconscient",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#8a5fa0",
+    tagline: "Ce qui agit en nous à notre insu",
+    definition: "L'inconscient désigne l'ensemble des processus psychiques hors du champ de la conscience. Freud en fait une instance structurée, dotée de ses propres mécanismes (refoulement, désir). Il remet en cause l'idée d'une maîtrise totale de soi : le moi n'est pas maître en sa propre maison.",
+    quote: { text: "Le moi n'est pas maître dans sa propre maison.", author: "Freud" },
+    philosophers: ["Freud", "Jung", "Lacan", "Alain", "Sartre"],
+    problems: [
+      "L'inconscient remet-il en cause la responsabilité morale ?",
+      "L'inconscient est-il une excuse ou une réalité ?",
+      "Peut-on connaître son inconscient ?",
+      "Sommes-nous vraiment libres si l'inconscient nous gouverne ?"
+    ]
+  },
+  {
+    id: 3,
+    title: "Le Devoir",
+    category: "morale",
+    catLabel: "Morale & Politique",
+    accent: "#b05a3a",
+    tagline: "L'obligation morale qui transcende l'intérêt personnel",
+    definition: "Le devoir est ce que l'on doit faire moralement, indépendamment de nos désirs ou intérêts. Pour Kant, il existe un impératif catégorique : agis seulement selon la maxime dont tu peux vouloir qu'elle devienne une loi universelle. Le devoir s'oppose au bonheur comme finalité.",
+    quote: { text: "Agis comme si la maxime de ton action devait devenir une loi universelle.", author: "Kant, Fondements de la métaphysique des mœurs" },
+    philosophers: ["Kant", "Aristote", "Durkheim", "Sartre", "Nietzsche"],
+    problems: [
+      "Le devoir est-il compatible avec le bonheur ?",
+      "D'où viennent nos devoirs : la nature, la société, la raison ?",
+      "Peut-on avoir le devoir de désobéir ?",
+      "Le devoir moral est-il universel ?"
+    ]
+  },
+  {
+    id: 4,
+    title: "La Liberté",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#3a8a6b",
+    tagline: "Le pouvoir d'agir selon sa propre volonté",
+    definition: "La liberté peut désigner le libre arbitre (capacité de choisir sans contrainte), la liberté politique (absence de domination) ou l'autonomie (se donner sa propre loi). Sartre affirme que l'homme est « condamné à être libre » : il ne peut pas ne pas choisir.",
+    quote: { text: "L'homme est condamné à être libre.", author: "Sartre, L'existentialisme est un humanisme" },
+    philosophers: ["Sartre", "Kant", "Spinoza", "Rousseau", "Locke", "Mill"],
+    problems: [
+      "Le libre arbitre existe-t-il vraiment ?",
+      "Peut-on être libre dans une société ?",
+      "La liberté est-elle une illusion face au déterminisme ?",
+      "Liberté et responsabilité sont-elles inséparables ?"
+    ]
+  },
+  {
+    id: 5,
+    title: "Le Bonheur",
+    category: "morale",
+    catLabel: "Morale & Politique",
+    accent: "#c9a84c",
+    tagline: "L'état de satisfaction durable et accomplie",
+    definition: "Le bonheur est un état de satisfaction globale et durable. Épicure le définit comme l'ataraxie (absence de trouble de l'âme) et l'aponie (absence de douleur du corps). Kant conteste que le bonheur soit le but suprême de la morale : ce n'est pas parce qu'une action rend heureux qu'elle est morale.",
+    quote: { text: "Le bonheur n'est pas un idéal de la raison mais de l'imagination.", author: "Kant" },
+    philosophers: ["Épicure", "Aristote", "Kant", "Schopenhauer", "Rousseau", "Mill"],
+    problems: [
+      "Le bonheur est-il accessible ?",
+      "Le désir est-il obstacle ou chemin vers le bonheur ?",
+      "Bonheur individuel et bonheur collectif sont-ils compatibles ?",
+      "Le bonheur est-il une question de chance ou de vertu ?"
+    ]
+  },
+  {
+    id: 6,
+    title: "La Religion",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#7a6a9a",
+    tagline: "Le lien entre l'homme et le sacré",
+    definition: "La religion (du latin religare : relier) désigne l'ensemble des croyances et pratiques qui relient l'homme à une puissance transcendante. Elle répond aux questions existentielles sur l'origine, la mort, le sens. Marx voit en elle l'opium du peuple ; Durkheim y voit un fait social fondateur.",
+    quote: { text: "La religion est le soupir de la créature opprimée, l'opium du peuple.", author: "Marx" },
+    philosophers: ["Kant", "Marx", "Durkheim", "Freud", "Pascal", "Anselme de Cantorbéry"],
+    problems: [
+      "La religion est-elle compatible avec la raison ?",
+      "L'existence de Dieu peut-elle être prouvée ?",
+      "La religion est-elle une source de morale ou d'aliénation ?",
+      "Peut-on vivre sans religion ?"
+    ]
+  },
+  {
+    id: 7,
+    title: "Le Langage",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#3a6b8a",
+    tagline: "Le système de signes qui structure notre pensée",
+    definition: "Le langage est un système de signes permettant la communication et la pensée. Il n'est pas qu'un outil : il structure notre rapport au monde. Wittgenstein affirme que les limites de mon langage signifient les limites de mon monde. Le langage nous précède et nous constitue.",
+    quote: { text: "Les limites de mon langage signifient les limites de mon monde.", author: "Wittgenstein" },
+    philosophers: ["Wittgenstein", "Saussure", "Hegel", "Bergson", "Merleau-Ponty"],
+    problems: [
+      "Peut-on penser sans langage ?",
+      "Le langage dit-il vraiment la réalité ?",
+      "Le langage est-il un outil de communication ou de pouvoir ?",
+      "Les animaux ont-ils un langage ?"
+    ]
+  },
+  {
+    id: 8,
+    title: "L'Art",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#a06b3a",
+    tagline: "La création humaine qui donne forme au sensible",
+    definition: "L'art est une activité humaine qui produit des œuvres dotées d'une valeur esthétique. Il se distingue de la technique par sa finalité : l'artiste ne produit pas pour l'utilité mais pour l'expression. Hegel voit dans l'art une manifestation sensible de l'Idée, une façon de faire paraître l'absolu.",
+    quote: { text: "L'art est la mise en forme du monde sensible par la liberté humaine.", author: "Hegel" },
+    philosophers: ["Platon", "Hegel", "Kant", "Nietzsche", "Freud", "Bergson"],
+    problems: [
+      "L'art imite-t-il la nature ou la dépasse-t-il ?",
+      "Peut-il y avoir des règles pour juger une œuvre d'art ?",
+      "L'art est-il un luxe ou une nécessité ?",
+      "L'œuvre d'art nous dit-elle quelque chose de vrai ?"
+    ]
+  },
+  {
+    id: 9,
+    title: "La Technique",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#6a8a4a",
+    tagline: "L'ensemble des moyens inventés par l'homme pour agir sur le monde",
+    definition: "La technique est l'ensemble des procédés et savoir-faire qui permettent à l'homme de transformer la nature. Elle est à la fois ce qui le libère (des contraintes naturelles) et ce qui peut l'asservir (aliénation par le travail à la chaîne). Heidegger voit dans la technique moderne un danger pour l'être.",
+    quote: { text: "L'essence de la technique n'est absolument rien de technique.", author: "Heidegger" },
+    philosophers: ["Heidegger", "Marx", "Bergson", "Simondon", "Ellul"],
+    problems: [
+      "La technique libère-t-elle ou aliène-t-elle l'homme ?",
+      "L'homme est-il défini par sa technique ?",
+      "Y a-t-il un progrès technique sans progrès moral ?",
+      "La technique peut-elle tout résoudre ?"
+    ]
+  },
+  {
+    id: 10,
+    title: "Le Travail",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#8a5a3a",
+    tagline: "L'activité humaine transformant la nature",
+    definition: "Le travail est l'activité par laquelle l'homme transforme la nature pour satisfaire ses besoins. Pour Hegel, le travail est formateur : en transformant le monde, l'homme se transforme lui-même et prend conscience de lui. Marx voit dans le travail aliéné le cœur de la domination capitaliste.",
+    quote: { text: "C'est dans le travail que l'homme se produit lui-même.", author: "Marx" },
+    philosophers: ["Marx", "Hegel", "Bergson", "Arendt", "Taylor"],
+    problems: [
+      "Le travail est-il une contrainte ou un accomplissement ?",
+      "Le travail donne-t-il un sens à la vie ?",
+      "Peut-on s'épanouir dans le travail ?",
+      "Faut-il travailler pour être heureux ?"
+    ]
+  },
+  {
+    id: 11,
+    title: "La Justice",
+    category: "morale",
+    catLabel: "Morale & Politique",
+    accent: "#4a7a8a",
+    tagline: "Le principe d'égalité et d'équité dans la société",
+    definition: "La justice désigne à la fois une vertu morale (agir justement) et un idéal politique (une société juste). Pour Aristote, la justice distributive consiste à traiter également les égaux et inégalement les inégaux. Rawls propose le « voile d'ignorance » : imaginons les règles de société sans savoir quelle place on y occupera.",
+    quote: { text: "La justice sans la force est impuissante, la force sans la justice est tyrannique.", author: "Pascal" },
+    philosophers: ["Aristote", "Rawls", "Pascal", "Platon", "Marx", "Rousseau"],
+    problems: [
+      "Égalité et équité sont-elles la même chose ?",
+      "La vengeance est-elle juste ?",
+      "La loi est-elle toujours juste ?",
+      "Peut-il y avoir une justice sociale absolue ?"
+    ]
+  },
+  {
+    id: 12,
+    title: "L'État",
+    category: "morale",
+    catLabel: "Morale & Politique",
+    accent: "#3a5a8a",
+    tagline: "L'institution politique qui détient le monopole de la violence légitime",
+    definition: "L'État est une institution politique qui exerce une autorité souveraine sur un territoire et une population. Weber définit l'État par le monopole de la violence légitime. Pour Hobbes, sans État, la vie serait « solitaire, pauvre, brutale et courte » (guerre de tous contre tous).",
+    quote: { text: "Sans État, la vie des hommes est solitaire, misérable, brutale et courte.", author: "Hobbes, Léviathan" },
+    philosophers: ["Hobbes", "Locke", "Rousseau", "Hegel", "Marx", "Weber"],
+    problems: [
+      "L'État est-il nécessaire ou une contrainte à la liberté ?",
+      "L'État peut-il être injuste ?",
+      "A-t-on le droit de désobéir à l'État ?",
+      "Vers quel type d'État doit-on tendre ?"
+    ]
+  },
+  {
+    id: 13,
+    title: "La Nature",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#4a8a5a",
+    tagline: "Ce qui existe indépendamment de l'activité humaine",
+    definition: "La nature désigne l'ensemble de ce qui existe sans l'intervention de l'homme, mais aussi la « nature humaine » (ce que l'homme est par essence). Rousseau oppose l'homme naturel, bon, à l'homme social, corrompu. Descartes fait de l'homme le « maître et possesseur de la nature ».",
+    quote: { text: "L'homme naît bon, c'est la société qui le corrompt.", author: "Rousseau" },
+    philosophers: ["Rousseau", "Descartes", "Aristote", "Darwin", "Spinoza"],
+    problems: [
+      "Y a-t-il une nature humaine immuable ?",
+      "L'homme fait-il partie de la nature ou s'en distingue-t-il ?",
+      "Peut-on aller contre nature ?",
+      "Nature et culture s'opposent-elles vraiment ?"
+    ]
+  },
+  {
+    id: 14,
+    title: "La Raison",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#9a7a3a",
+    tagline: "La faculté de penser selon des principes logiques",
+    definition: "La raison est la faculté qui permet de penser de manière cohérente, d'argumenter et de distinguer le vrai du faux. Pour Descartes, c'est la « chose du monde la mieux partagée ». Kant distingue l'entendement (usage théorique) de la raison pratique (morale). Hegel en fait le moteur de l'histoire.",
+    quote: { text: "La raison est la chose du monde la mieux partagée.", author: "Descartes, Discours de la méthode" },
+    philosophers: ["Descartes", "Kant", "Hegel", "Hume", "Pascal", "Nietzsche"],
+    problems: [
+      "La raison peut-elle tout expliquer ?",
+      "Y a-t-il des limites à la raison ?",
+      "Raison et passion s'opposent-elles nécessairement ?",
+      "La raison est-elle universelle ?"
+    ]
+  },
+  {
+    id: 15,
+    title: "La Science",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#3a7a9a",
+    tagline: "La connaissance méthodique, vérifiable et universelle du monde",
+    definition: "La science est un ensemble de connaissances objectives, vérifiables et construites par une méthode rigoureuse. Galilée initie la science moderne en couplant expérimentation et mathématisation. Popper introduit le critère de réfutabilité : une théorie scientifique doit pouvoir être réfutée par l'expérience.",
+    quote: { text: "Le livre de la nature est écrit en langage mathématique.", author: "Galilée" },
+    philosophers: ["Galilée", "Popper", "Kuhn", "Bachelard", "Descartes", "Kant"],
+    problems: [
+      "La science peut-elle tout expliquer ?",
+      "Y a-t-il des vérités que la science ne peut atteindre ?",
+      "Science et technique sont-elles indissociables ?",
+      "Le progrès scientifique est-il toujours progrès moral ?"
+    ]
+  },
+  {
+    id: 16,
+    title: "La Vérité",
+    category: "connaissance",
+    catLabel: "Connaissance",
+    accent: "#7a9a4a",
+    tagline: "La conformité du jugement avec la réalité",
+    definition: "La vérité est traditionnellement définie comme l'adéquation entre un énoncé et la réalité (adequatio rei et intellectus). Nietzsche bouscule cette conception : la vérité serait une illusion que nous avons oublié être des illusions. Le pragmatisme (James) définit la vérité par son utilité.",
+    quote: { text: "Il n'y a pas de faits, seulement des interprétations.", author: "Nietzsche" },
+    philosophers: ["Platon", "Descartes", "Nietzsche", "James", "Hegel", "Bachelard"],
+    problems: [
+      "La vérité est-elle relative ou absolue ?",
+      "Peut-on atteindre la vérité ?",
+      "Faut-il toujours dire la vérité ?",
+      "La vérité est-elle différente selon les domaines (science, art, morale) ?"
+    ]
+  },
+  {
+    id: 17,
+    title: "Le Temps",
+    category: "existence",
+    catLabel: "Existence & Culture",
+    accent: "#9a4a6a",
+    tagline: "La dimension dans laquelle se déroule l'existence",
+    definition: "Le temps est la dimension dans laquelle se succèdent les événements (passé, présent, futur). Saint Augustin avoue : « Qu'est-ce donc que le temps ? Si personne ne me le demande, je le sais ; si je veux l'expliquer, je ne le sais plus. » Bergson distingue le temps scientifique (mesurable) de la durée vécue (intérieure).",
+    quote: { text: "Qu'est-ce que le temps ? Si personne ne me le demande, je le sais ; si je veux l'expliquer, je ne le sais plus.", author: "Saint Augustin, Confessions" },
+    philosophers: ["Augustin", "Bergson", "Heidegger", "Husserl", "Newton", "Kant"],
+    problems: [
+      "Le temps existe-t-il objectivement ou n'est-il que subjectif ?",
+      "Peut-on maîtriser le temps ?",
+      "Le passé est-il encore réel ?",
+      "Qu'est-ce que vivre dans l'instant présent ?"
+    ]
+  }
+];
+
+const catColors = {
+  existence: "#3a8a6b",
+  morale: "#b05a3a",
+  connaissance: "#3a6b8a"
+};
+
+function getAccent(notion) {
+  return notion.accent || catColors[notion.category] || "#c9a84c";
+}
+
+function renderCards(filter = 'all') {
+  const grid = document.getElementById('grid');
+  const filtered = filter === 'all' ? notions : notions.filter(n => n.category === filter);
+  grid.innerHTML = '';
+  filtered.forEach((n, i) => {
+    const accent = getAccent(n);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.setProperty('--card-accent', accent);
+    card.setAttribute('data-id', n.id);
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-number">0${n.id < 10 ? '0' + n.id : n.id}</div>
+        <div class="card-title-block">
+          <div class="card-category">${n.catLabel}</div>
+          <div class="card-title">${n.title}</div>
+          <div class="card-tagline">${n.tagline}</div>
+        </div>
+        <div class="card-toggle">+</div>
+      </div>
+      <div class="card-body">
+        <div class="section-label">Définition</div>
+        <div class="section-content">${n.definition}</div>
+
+        <div class="section-label">Citation clé</div>
+        <div class="quote-block">
+          <div class="quote-text">« ${n.quote.text} »</div>
+          <div class="quote-author">— ${n.quote.author}</div>
+        </div>
+
+        <div class="section-label">Philosophes à connaître</div>
+        <div class="philosophers">${n.philosophers.map(p => `<span class="philosopher-tag">${p}</span>`).join('')}</div>
+
+        <div class="section-label">Problématiques essentielles</div>
+        <div class="problems">${n.problems.map(p => `<div class="problem-item"><div class="problem-dot"></div><span>${p}</span></div>`).join('')}</div>
+      </div>
+    `;
+    card.addEventListener('click', () => {
+      const isOpen = card.classList.contains('open');
+      document.querySelectorAll('.card.open').forEach(c => c.classList.remove('open'));
+      if (!isOpen) card.classList.add('open');
+    });
+    grid.appendChild(card);
+  });
+}
+
+function filterCards(cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderCards(cat);
+}
+
+renderCards();
+</script>
+</body>
+</html>
